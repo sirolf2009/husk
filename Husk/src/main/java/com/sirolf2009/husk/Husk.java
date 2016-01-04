@@ -26,6 +26,8 @@ public class Husk {
 	private String name;
 	private String splash;
 	private BuiltinHandler builtinHandler;
+	private List<InputConverter> inputConverters;
+	private List<OutputConverter> outputConverters;
 	private static final String defaultSplash = ""+
 			" ____  ____                 __       \n"+
 			"|_   ||   _|               [  |  _\n"+   
@@ -57,6 +59,32 @@ public class Husk {
 		commands = new HashMap<String, List<CommandMethod>>();
 		registerMethodHandler(builtinHandler);
 		registerMethodHandler(handler);
+		inputConverters = new ArrayList<InputConverter>();
+		outputConverters = new ArrayList<OutputConverter>();
+	}
+
+	public String getSplash() {
+		return splash;
+	}
+
+	public void setSplash(String splash) {
+		this.splash = splash;
+	}
+
+	public List<InputConverter> getInputConverters() {
+		return inputConverters;
+	}
+
+	public void setInputConverters(List<InputConverter> inputConverters) {
+		this.inputConverters = inputConverters;
+	}
+
+	public List<OutputConverter> getOutputConverters() {
+		return outputConverters;
+	}
+
+	public void setOutputConverters(List<OutputConverter> outputConverters) {
+		this.outputConverters = outputConverters;
 	}
 
 	public void commandLoop() {
@@ -64,11 +92,18 @@ public class Husk {
 		if(splash != null && !splash.isEmpty()) {
 			System.out.println(splash);
 		}
-		while(true) {
+		loop: while(true) {
 			try {
 				System.out.print(name+"> ");
 				CommandResults result = execute(reader.readLine());
 				if(result.getMethod().getMethod() != null && !result.getMethod().getMethod().getReturnType().equals(void.class)) {
+					for(OutputConverter outputConverter : outputConverters) {
+						String returned = outputConverter.convert(result.getReturnValue());
+						if(returned != null) {
+							System.out.println(returned);
+							continue loop;
+						}
+					}
 					System.out.println(result.getReturnValue());
 				}
 			} catch (IOException e) {
@@ -178,6 +213,20 @@ public class Husk {
 	public CommandResults executeCommand(String name, Object[] parameters, Object handler) throws CommandNotFoundException, IllegalAccessException, InvocationTargetException {
 		if(commands.get(name) != null) {
 			for(CommandMethod method : commands.get(name)) {
+				if(method.getMethod().getParameterCount() == parameters.length) {
+					try {
+						Parameter[] methodParams = method.getMethod().getParameters();
+						Object[] convertedParameters = new Object[parameters.length];
+						for(int i = 0; i < parameters.length; i++) {
+							convertedParameters[i] = convert(parameters[i], methodParams[i].getType());
+						}
+						Object object = method.getMethod().invoke(handler, convertedParameters);
+						return new CommandResults(object, method);
+					} catch (IllegalArgumentException | ArrayStoreException e) {
+					}
+				}
+			};
+			for(CommandMethod method : commands.get(name)) {
 				try {
 					Object object = method.getMethod().invoke(handler, parameters);
 					return new CommandResults(object, method);
@@ -199,6 +248,16 @@ public class Husk {
 			};
 		}
 		throw new CommandNotFoundException(name, parameters);
+	}
+
+	private Object convert(Object object, Class<?> clazz) {
+		for(InputConverter converter : inputConverters) {
+			Object returned = converter.convert(object, clazz);
+			if(returned != null) {
+				return returned;
+			}
+		}
+		return object;
 	}
 
 	private void trySaveCommand(String name, CommandMethod method) throws CommandSaveException {

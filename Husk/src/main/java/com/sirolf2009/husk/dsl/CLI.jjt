@@ -10,11 +10,12 @@ public class CLI {
   }
   
   public static SimpleNode parse(String command) throws ParseException {
-    return new CLI(new java.io.StringReader(command)).cliCommand();
+    SimpleNode node = new CLI(new java.io.StringReader(command)).cliCommand();
+    return node;
   }}PARSER_END(CLI)SKIP :{
   " "| "\r"| "\t"| "\n"}TOKEN :{  < PIPELINE : "|" >
 | < WORD : (< CHAR >)+ >
-| < #CHAR : [ "a"-"z" , "A"-"Z", "[", "$", "&", "+", ",", ":", ";", "=", "?", "@", "#", "|", "'", "<", ">", ".", "^", "*", "(", ")", "%", "!", "-", "]" ] >}
+| < #CHAR : [ "a"-"z" , "A"-"Z", "[", "$", "&", "+", ",", ":", ";", "=", "?", "@", "#", "|", "'", "<", ">", ".", "^", "*", "(", ")", "%", "!", "-", "]", "/", "\\", "0"-"9" ] >}
 
 TOKEN : {
   <INTEGER_LITERAL: <DECIMAL_LITERAL> | <HEX_LITERAL> | <OCTAL_LITERAL>>
