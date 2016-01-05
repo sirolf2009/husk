@@ -2,6 +2,13 @@ machine:
   java:
     version: oraclejdk8
 
+dependencies:
+  pre:
+    - wget https://olex-secure.openlogic.com/content/openlogic/javacc/4.2/openlogic-javacc-4.2-all-bin-1.zip
+    - unzip openlogic-javacc-4.2-all-bin-1.zip
+
 test:
+  pre:
+    - javacc-4.2/bin/jjtree Husk/src/main/java/com/sirolf2009/husk/dsl/CLI.jjt
   override:
     - mvn  -f Husk/pom.xml install
