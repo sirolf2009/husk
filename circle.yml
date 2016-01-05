@@ -8,6 +8,7 @@ dependencies:
 
 test:
   pre:
-    - jjtree -OUTPUT_DIRECTORY=Husk/src/main/java/com/sirolf2009/husk/dsl Husk/src/main/java/com/sirolf2009/husk/dsl/CLI.jjt
+    - jjtree -OUTPUT_FILE:CLI.jj -OUTPUT_DIRECTORY=Husk/src/main/java/com/sirolf2009/husk/dsl Husk/src/main/java/com/sirolf2009/husk/dsl/CLI.jjt
+    - javacc -OUTPUT_DIRECTORY=Husk/src/main/java/com/sirolf2009/husk/dsl Husk/src/main/java/com/sirolf2009/husk/dsl/CLI.jj
   override:
     - mvn  -f Husk/pom.xml install
