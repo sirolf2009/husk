@@ -30,7 +30,7 @@ public class TestShell {
 	}
 
 	@Command
-	public Class<?> getNumberType(Number number, String... parameters) {
+	public Class<?> getNumberType(Number number, String... strings) {
 		return number.getClass();
 	}
 

@@ -13,9 +13,7 @@ public class CLI {
     SimpleNode node = new CLI(new java.io.StringReader(command)).cliCommand();
     return node;
   }}PARSER_END(CLI)SKIP :{
-  " "| "\r"| "\t"| "\n"}TOKEN :{  < PIPELINE : "|" >
-| < WORD : (< CHAR >)+ >
-| < #CHAR : [ "a"-"z" , "A"-"Z", "[", "$", "&", "+", ",", ":", ";", "=", "?", "@", "#", "|", "'", "<", ">", ".", "^", "*", "(", ")", "%", "!", "-", "]", "/", "\\", "0"-"9" ] >}
+  " "| "\r"| "\t"| "\n"}
 
 TOKEN : {
   <INTEGER_LITERAL: <DECIMAL_LITERAL> | <HEX_LITERAL> | <OCTAL_LITERAL>>
@@ -31,8 +29,15 @@ TOKEN : {
 | <#HEXADECIMAL_DOUBLE_POINT_LITERAL: "0" ["x","X"] (["0"-"9","a"-"f","A"-"F"])+ (".")? <HEXADECIMAL_EXPONENT> (["d","D"])? | "0" ["x","X"] (["0"-"9","a"-"f","A"-"F"])* "." (["0"-"9","a"-"f","A"-"F"])+ <HEXADECIMAL_EXPONENT> (["d","D"])?>
 | <#HEXADECIMAL_FLOATING_POINT_LITERAL: "0" ["x","X"] (["0"-"9","a"-"f","A"-"F"])+ (".")? <HEXADECIMAL_EXPONENT> (["f","F"])? | "0" ["x","X"] (["0"-"9","a"-"f","A"-"F"])* "." (["0"-"9","a"-"f","A"-"F"])+ <HEXADECIMAL_EXPONENT> (["f","F"])?>
 | <#HEXADECIMAL_EXPONENT: ["p","P"] (["+","-"])? (["0"-"9"])+>
-| <CHARACTER_LITERAL: "\'" (~["\'","\\","\n","\r"] | "\\" (["n","t","b","r","f","\\","\'","\""] | ["0"-"7"] (["0"-"7"])? | ["0"-"3"] ["0"-"7"] ["0"-"7"])) "\'">
-| <STRING_LITERAL: "\"" (~["\"","\\","\n","\r"] | "\\" (["n","t","b","r","f","\\","\'","\""] | ["0"-"7"] (["0"-"7"])? | ["0"-"3"] ["0"-"7"] ["0"-"7"]))* "\"">
+| <#CHARACTER_LITERAL: "\'" (~["\'","\\","\n","\r"] | "\\" (["n","t","b","r","f","\\","\'","\""] | ["0"-"7"] (["0"-"7"])? | ["0"-"3"] ["0"-"7"] ["0"-"7"])) "\'">
+| <#STRING_LITERAL: (~["\"","\\","\n","\r"] | "\\" (["n","t","b","r","f","\\","\'","\""] | ["0"-"7"] (["0"-"7"])? | ["0"-"3"] ["0"-"7"] ["0"-"7"]))* >
+}
+
+TOKEN :
+{
+  < PIPELINE : "|" >
+| < WORD : (< CHAR >)+ >
+| < #CHAR : [ "a"-"z" , "A"-"Z", "[", "$", "&", "+", ",", ":", ";", "=", "?", "@", "#", "|", "'", "<", ">", ".", "^", "*", "(", ")", "%", "!", "-", "]", "/", "\\", "0"-"9" ] >
 }
 SimpleNode cliCommand() :{}{  (command() ((< PIPELINE > command())+)?)? < EOF >  {
 	return ((SimpleNode)jjtree.rootNode());  }}
@@ -45,7 +50,7 @@ void pipelinedCommand() :
 void command() :
 {}
 {
-  word() ( word() | number() )*}
+  word() ( number() | word() )*}
 
 Number number() :
 {
