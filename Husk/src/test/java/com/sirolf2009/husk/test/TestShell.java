@@ -12,13 +12,18 @@ import com.sirolf2009.husk.Husk.CommandNotFoundException;
 import com.sirolf2009.husk.Husk.CommandSaveException;
 import com.sirolf2009.husk.dsl.ParseException;
 
+import java.io.Console;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.ArrayList;
+
 public class TestShell {
 
 	@Command
 	public void testCommand() {
 		System.out.println("Executed");
 	}
-	
+
 	@Command
 	public void testCommand(String parameter) {
 		System.out.println("Executed with param "+parameter);
@@ -38,19 +43,19 @@ public class TestShell {
 	public int count(String parameter) {
 		return parameter.length();
 	}
-	
+
 	@Command
 	public String getRandomString() {
 		return "35394fc9-e96e-4921-95b2-1d4642712d78";
 	}
-	
+
 	@Command(description="Reverse a string")
 	public String reverse(String string) {
 		return new StringBuilder(string).reverse().toString();
 	}
-	
+
 	@Test
-	public void test() throws CommandNotFoundException, ParseException, CommandSaveException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+	public void test() throws CommandNotFoundException, ParseException, CommandSaveException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, IOException, InterruptedException {
 		new Husk(this).execute("");
 		new Husk(this).execute("testCommand");
 		new Husk(this).execute("testCommand hello ");
