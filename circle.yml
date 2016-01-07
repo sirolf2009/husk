@@ -2,6 +2,13 @@ machine:
   java:
     version: oraclejdk8
 
+dependencies:
+  pre:
+    - sudo apt-get install javacc
+
 test:
+  pre:
+    - jjtree -OUTPUT_FILE:CLI.jj -OUTPUT_DIRECTORY=Husk/src/main/java/com/sirolf2009/husk/dsl Husk/src/main/java/com/sirolf2009/husk/dsl/CLI.jjt
+    - javacc -OUTPUT_DIRECTORY=Husk/src/main/java/com/sirolf2009/husk/dsl Husk/src/main/java/com/sirolf2009/husk/dsl/CLI.jj
   override:
     - mvn  -f Husk/pom.xml install
