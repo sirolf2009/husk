@@ -8,44 +8,15 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.*;
-
-import com.googlecode.lanterna.gui.Window;
-import com.googlecode.lanterna.gui.component.Label;
-import com.googlecode.lanterna.gui.component.Panel.Orientation;
-import com.googlecode.lanterna.gui.component.Panel;
-import com.googlecode.lanterna.gui.component.TextBox;
-import com.googlecode.lanterna.gui.layout.BorderLayout;
-import com.googlecode.lanterna.gui.layout.LayoutParameter;
-import com.googlecode.lanterna.gui.layout.LinearLayout;
-import com.googlecode.lanterna.gui.component.TextArea;
-import com.googlecode.lanterna.gui.Theme.Category;
-import com.googlecode.lanterna.gui.Theme.Definition;
-import com.googlecode.lanterna.gui.listener.WindowListener;
-import com.googlecode.lanterna.input.Key;
-import com.googlecode.lanterna.gui.Border;
-import com.googlecode.lanterna.gui.GUIScreen;
-import com.googlecode.lanterna.gui.GUIScreenBackgroundRenderer;
-import com.googlecode.lanterna.gui.Interactable;
-import com.googlecode.lanterna.gui.TextGraphics;
-import com.googlecode.lanterna.gui.Theme;
-import com.googlecode.lanterna.TerminalFacade;
-
-import com.googlecode.lanterna.terminal.Terminal;
-import com.googlecode.lanterna.terminal.Terminal.Color;
-
+import java.util.List;
 import java.util.Map;
 
-import com.googlecode.lanterna.terminal.text.UnixTerminal;
 import com.sirolf2009.husk.dsl.CLI;
 import com.sirolf2009.husk.dsl.ParseException;
 import com.sirolf2009.husk.dsl.SimpleNode;
-
-import java.io.IOException;
 
 public class Husk {
 
@@ -488,48 +459,6 @@ public class Husk {
 			this.collider = collider;
 		}
 
-	}
-
-	//mvn compile exec:java -Dexec.mainClass="com.sirolf2009.husk.Husk"
-	
-	public static void main(String[] args) throws Exception {
-		try {
-			term(TerminalFacade.createTextTerminal());
-		} catch(Exception e) {
-			term(TerminalFacade.createSwingTerminal());
-		}
-	}
-	
-	public static void term(Terminal terminal) {
-		GUIScreen textGUI = TerminalFacade.createGUIScreen(terminal);
-		textGUI.getScreen().startScreen();
-		textGUI.setTheme(new CustomTheme());
-
-	    //Do GUI logic here
-	    Window window = new Window("");
-	    window.setBorder(new Border.Invisible());
-	    Panel container = new Panel();
-	    Panel panel = new Panel(Orientation.HORISONTAL);
-	    panel.addComponent(new Label("Husk >"));
-	    panel.addComponent(new TextBox());
-	    container.setLayoutManager(new BorderLayout());
-	    container.addComponent(panel, BorderLayout.BOTTOM);
-	    window.addComponent(container, LinearLayout.MAXIMIZES_HORIZONTALLY, LinearLayout.MAXIMIZES_VERTICALLY);
-	    textGUI.showWindow(window);
-
-	    textGUI.getScreen().stopScreen();
-	}
-	
-	public static class CustomTheme extends Theme {
-		
-		public CustomTheme() {
-			super();
-	        setDefinition(Category.SCREEN_BACKGROUND, new Definition(Color.BLACK, Color.BLACK));
-	        setDefinition(Category.DIALOG_AREA, new Definition(Color.WHITE, Color.BLACK));
-	        setDefinition(Category.TEXTBOX, new Definition(Color.WHITE, Color.BLACK));
-	        setDefinition(Category.TEXTBOX_FOCUSED, new Definition(Color.WHITE, Color.BLACK));
-		}
-		
 	}
 
 }
