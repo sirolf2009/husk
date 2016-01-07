@@ -1,6 +1,15 @@
 # Husk
 A nutty shell
 
+## Maven
+```xml
+		<dependency>
+			<groupId>com.sirolf2009</groupId>
+			<artifactId>husk</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+```
+
 ## About
 This is a java shell to quickly set up commands, rather than building a GUI.
 It's intentions are to be able to do anything a standard UNIX shell can do, with the ease of [Cliche Shell](https://code.google.com/p/cliche/)
