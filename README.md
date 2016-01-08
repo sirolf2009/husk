@@ -3,11 +3,11 @@ A nutty shell
 
 ## Maven
 ```xml
-		<dependency>
-			<groupId>com.sirolf2009</groupId>
-			<artifactId>husk</artifactId>
-			<version>0.0.1</version>
-		</dependency>
+<dependency>
+    <groupId>com.sirolf2009</groupId>
+    <artifactId>Husk</artifactId>
+    <version>0.0.1</version>
+</dependency>
 ```
 
 ## About
