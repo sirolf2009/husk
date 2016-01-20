@@ -6,13 +6,13 @@ A nutty shell
 <dependency>
     <groupId>com.sirolf2009</groupId>
     <artifactId>Husk</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
 </dependency>
 ```
 
 ## About
 This is a java shell to quickly set up commands, rather than building a GUI.
-It's intentions are to be able to do anything a standard UNIX shell can do, with the ease of [Cliche Shell](https://code.google.com/p/cliche/)
+It's intentions are to be able to do anything a standard UNIX shell can do, with the ease of [Cliche Shell](https://code.google.com/p/cliche/), along with some more optional utilities
 
 ## Guide
 What we'll need is one class where we can add commands and register them to the shell. Let's make it look something like this:
@@ -130,3 +130,37 @@ Let's see what we now get when we type `?list`
 ║ reverse     │ r            │ String[]   │ reverse a string array   ║
 ╚═════════════╧══════════════╧════════════╧══════════════════════════╝
 ```
+
+### RMI
+RMI stands for Remote Method Invocation and basically means that a client can perform functions on a server. If you enable shared mode on Husk like so:
+```java
+new Husk(new Handler()).shared(4567);
+```
+An RMI server will start hosting on port 4567. If you run the same code again, the new instance of husk will search for existing instances of servers. By default it only looks at localhost, but different IP's can be passed as a second parameter.
+
+Once you have your second instance running, you can start executing commands at the server. Say that the server has this handler registered:
+```java
+public static class Handler {
+		
+	private String value;
+	@Command
+	public void setValue(String value) {
+		this.value = value;
+	}
+	
+	@Command
+	public String getValue() {
+		return value;
+	}
+	
+}
+```
+and in the first husk instance, the server instance, you type:
+```
+gv
+sv hello
+gv
+```
+The first get-value will return `null`, makes sense. The second get-value will return `hello`. Again, nothing special here.
+
+Now take your second instance of husk, the client instance, and run `gv`. What do you get? Exactly! `hello`. If you now run `sv world` on the client and `gv` on the server, then the server will display `world`. You can use this to build debugging or monitoring handlers, that can help you with operating servers, or you can treat the shells as multiple shell instances of the same application.
