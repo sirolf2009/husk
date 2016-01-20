@@ -1,14 +1,16 @@
 package com.sirolf2009.husk;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
-public class CommandMethod {
+public class CommandMethod implements Serializable {
 
+	private static final long serialVersionUID = 728888558669820405L;
 	private String name;
 	private String abbrev;
 	private String helpDescription;
-	private Method method;
+	private transient Method method;
 
 	public CommandMethod(String name, String abbrev, String helpDescription, Method method) {
 		this.name = name;
